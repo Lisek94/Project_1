@@ -56,7 +56,10 @@ public class Main
 			Scanner scan = new Scanner(System.in);
 			inputChoice = scan.nextInt();
 			list.remove(inputChoice-1);
-			break;				
+			break;		
+		case 8:
+			Menu.infoAboutProgram();
+			break;
 		default:
 			System.out.println("Z³a cyfra gnoju");
 		}

@@ -91,6 +91,10 @@ public class Menu
 		return employee;
 	}
 	
+	public static void infoAboutProgram()
+	{
+		System.out.println("Wersja proramu 1.0");
+	}
 	
 	
 }
