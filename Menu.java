@@ -1,18 +1,20 @@
 package lis.damian.project;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.InputMismatchException;
 import java.util.LinkedList;
 import java.util.Scanner;
 
 public class Menu 
 {
+	static Scanner scan = new Scanner(System.in);
+	
 	public static int showMenu()
 	{
 		int input = 0;
 		boolean isNotDigit = true;
-		Scanner scan = new Scanner(System.in);
-		
-		
+				
 		System.out.println();
         System.out.println("****************************************");
         System.out.println("*                 MENU                 *");
@@ -43,12 +45,111 @@ public class Menu
         return input;       
 	}
 	
+	public static void switchCaseMenu() throws IOException 
+	{
+		int inputChoice = Menu.showMenu();
+		LinkedList<Employee> list = new LinkedList<Employee>();
+		String fileName = "baza.dat";	
+		Scanner scan = new Scanner(System.in);
+			
+		while(inputChoice != 0)
+		{
+			switch (inputChoice) 
+			{
+			case 1:
+				if(list.isEmpty())
+				{
+					System.out.println("Lista jest pusta!");
+				}
+				else 
+				{
+					showWorkersList(list);
+				}			
+				break;
+			case 2:
+				list.add(Menu.addEmployee());
+				System.out.println("Pracownik dodany");
+				break;
+			case 3:
+				saveToFile(list, fileName);
+				break;
+			case 4:
+				showWorkersList(list);
+				inputChoice = deleteEmployeeFromWorkersList(list, scan);
+				break;	
+			/*case 5:
+				showWorkersWithAllInformation(list);
+				System.out.println("Wybierz pracownika do edycji");
+				inputChoice = scan.nextInt();
+				break;*/
+			case 8:
+				Menu.infoAboutProgram();
+				break;
+			case 9:
+				fileName = changeFileName();
+				break;
+			default:
+				System.out.println("Nieprawid³owy wybór, spróbuj jeszcze raz");
+			}
+			System.out.println("\nWciœnij Enter, aby kontynuowaæ...");
+			System.in.read();
+			inputChoice = Menu.showMenu();
+		}
+		scan.close();
+	}
+
+	public static void showWorkersWithAllInformation(LinkedList<Employee> list) {
+		for (int i = 0; i < list.size(); i++) 
+		{
+		System.out.println(i+1+".");
+		System.out.println(list.get(i).showAllPersonalData());
+		}
+	}
+
+	public static void saveToFile(LinkedList<Employee> list, String fileName) throws IOException {
+		Employee saveLine;
+		FileWriter saveToFile = new FileWriter(fileName);
+		for (int i = 0; i < list.size(); i++) 
+		{
+		saveLine = list.get(i);			
+		saveToFile.write(i+1+"\n"+saveLine+"\n");				
+		}			
+		saveToFile.close();
+	}
+
+	public static int deleteEmployeeFromWorkersList(LinkedList<Employee> list, Scanner scan) {
+		int inputChoice;
+		System.out.println("Wybierz numer pracownika do usuniêcia");					
+		inputChoice = scan.nextInt();
+		list.remove(inputChoice-1);
+		return inputChoice;
+	}
+
+	public static void showWorkersList(LinkedList<Employee> list) 
+	{
+		for (int i = 0; i < list.size(); i++) 
+		{
+		System.out.println(i+1+".");
+		System.out.println(list.get(i).showBasicPersonalData());
+		}
+	}
+
+	public static String changeFileName() 
+	{
+		String fileName;
+		System.out.println("Podaj now¹ nazwe pliku");	
+		scan.nextLine();
+		fileName = scan.nextLine()+".dat";
+		System.out.println("Nazwa zmieniona");
+		return fileName;
+	}
+	
 	public static Employee addEmployee()
 	{
-		Scanner scan = new Scanner(System.in);
 		Employee employee = new Employee();
 		
 		System.out.println("Podaj imiê");
+		scan.nextLine();
 		employee.setName(scan.nextLine());
 		
 		System.out.println("Podaj Nazwisko");
@@ -60,10 +161,10 @@ public class Menu
 		{
 			employee.setGender('K');
 		}
-			else
-			{
-				employee.setGender('M');
-			}
+		else
+		{
+			employee.setGender('M');
+		}
 		
 		System.out.println("Wpisz numer dzia³u");
 		employee.setDepartmentNumber(scan.nextInt());
@@ -95,6 +196,7 @@ public class Menu
 	{
 		System.out.println("Wersja proramu 1.0");
 	}
+	
 	
 	
 }
