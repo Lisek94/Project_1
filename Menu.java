@@ -50,8 +50,7 @@ public class Menu
 		int inputChoice = Menu.showMenu();
 		LinkedList<Employee> list = new LinkedList<Employee>();
 		String fileName = "baza.dat";	
-		Scanner scan = new Scanner(System.in);
-			
+					
 		while(inputChoice != 0)
 		{
 			switch (inputChoice) 
@@ -77,11 +76,10 @@ public class Menu
 				showWorkersList(list);
 				inputChoice = deleteEmployeeFromWorkersList(list, scan);
 				break;	
-			/*case 5:
+			case 5:
 				showWorkersWithAllInformation(list);
-				System.out.println("Wybierz pracownika do edycji");
-				inputChoice = scan.nextInt();
-				break;*/
+				changeInformation(list);				
+				break;
 			case 8:
 				Menu.infoAboutProgram();
 				break;
@@ -96,6 +94,15 @@ public class Menu
 			inputChoice = Menu.showMenu();
 		}
 		scan.close();
+	}
+
+	public static void changeInformation(LinkedList<Employee> list) throws IOException {
+		int inputGetList;
+		System.out.println("\nWybierz pracownika do edycji");
+		inputGetList = scan.nextInt();
+		System.out.println(list.get(inputGetList-1).showNameAndSurname());
+		ContextMenu.switchCaseContextMenuFive(list, inputGetList);
+		
 	}
 
 	public static void showWorkersWithAllInformation(LinkedList<Employee> list) {
@@ -196,7 +203,5 @@ public class Menu
 	{
 		System.out.println("Wersja proramu 1.0");
 	}
-	
-	
 	
 }
