@@ -36,8 +36,9 @@ public class Menu
 	        {
 	        	input = scan.nextInt();
 	        	isNotDigit = false;
-			} catch (InputMismatchException e) {
-				System.out.println("To nie jest liczba, spróbuj jeszcze raz");		
+			} catch (InputMismatchException e) 
+	        {
+				System.out.println("To nie jest liczba, spróbuj jeszcze raz");				
 				isNotDigit = true;
 				scan.nextLine();
 			}	        
@@ -47,7 +48,7 @@ public class Menu
 	
 	public static void switchCaseMenu() throws IOException 
 	{
-		int inputChoice = Menu.showMenu();
+		int inputChoice = showMenu();
 		LinkedList<Employee> list = new LinkedList<Employee>();
 		String fileName = "baza.dat";	
 					
@@ -66,7 +67,7 @@ public class Menu
 				}			
 				break;
 			case 2:
-				list.add(Menu.addEmployee());
+				list.add(addEmployee());
 				System.out.println("Pracownik dodany");
 				break;
 			case 3:
@@ -80,8 +81,14 @@ public class Menu
 				showWorkersWithAllInformation(list);
 				changeInformation(list);				
 				break;
+			case 6:
+				ContextMenu.switchCaseContextMenuSix(list);
+				break;
+			case 7:
+				System.out.println("Funkcja wkrótce zostanie dodana");
+				break;
 			case 8:
-				Menu.infoAboutProgram();
+				infoAboutProgram();
 				break;
 			case 9:
 				fileName = changeFileName();
@@ -91,12 +98,13 @@ public class Menu
 			}
 			System.out.println("\nWciœnij Enter, aby kontynuowaæ...");
 			System.in.read();
-			inputChoice = Menu.showMenu();
+			inputChoice = showMenu();
 		}
 		scan.close();
 	}
 
-	public static void changeInformation(LinkedList<Employee> list) throws IOException {
+	public static void changeInformation(LinkedList<Employee> list) throws IOException 
+	{
 		int inputGetList;
 		System.out.println("\nWybierz pracownika do edycji");
 		inputGetList = scan.nextInt();
@@ -105,7 +113,8 @@ public class Menu
 		
 	}
 
-	public static void showWorkersWithAllInformation(LinkedList<Employee> list) {
+	public static void showWorkersWithAllInformation(LinkedList<Employee> list) 
+	{
 		for (int i = 0; i < list.size(); i++) 
 		{
 		System.out.println(i+1+".");
@@ -113,7 +122,8 @@ public class Menu
 		}
 	}
 
-	public static void saveToFile(LinkedList<Employee> list, String fileName) throws IOException {
+	public static void saveToFile(LinkedList<Employee> list, String fileName) throws IOException 
+	{
 		Employee saveLine;
 		FileWriter saveToFile = new FileWriter(fileName);
 		for (int i = 0; i < list.size(); i++) 
@@ -124,7 +134,8 @@ public class Menu
 		saveToFile.close();
 	}
 
-	public static int deleteEmployeeFromWorkersList(LinkedList<Employee> list, Scanner scan) {
+	public static int deleteEmployeeFromWorkersList(LinkedList<Employee> list, Scanner scan) 
+	{
 		int inputChoice;
 		System.out.println("Wybierz numer pracownika do usuniêcia");					
 		inputChoice = scan.nextInt();

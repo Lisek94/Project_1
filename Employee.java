@@ -69,7 +69,8 @@ public class Employee
 				+ " \nStan Cywilny: " + isMarriedExtracted();
 	}
 	
-	private String isMarriedExtracted() {
+	private String isMarriedExtracted() 
+	{
 		String isMarried = "";
 		if(this.isMarried == true)
 		{
@@ -82,7 +83,8 @@ public class Employee
 		return isMarried;
 	}
 	
-	private String genderExtracted() {
+	private String genderExtracted() 
+	{
 		String gender;
 		if(this.gender=='K')
 		{
