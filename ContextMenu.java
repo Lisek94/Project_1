@@ -161,12 +161,11 @@ public class ContextMenu
 			case 3:
 				showMaxSalary(list);
 				break;
-			case 4:
-				System.out.println("Funkcja wkrótce zostanie dodana");
-				/*showAllDepartmentsNumbers(list);
-				break;*/
+			case 4:				
+				showAllDepartmentsNumbers(list);
+				break;
 			case 5:
-				System.out.println("Funkcja wkrótce zostanie dodana");
+				showRatioForWomanAndMan(list);
 				break;
 			case 6:
 				System.out.println("Funkcja wkrótce zostanie dodana");
@@ -252,6 +251,36 @@ public class ContextMenu
 		System.out.println("Najwiêksza pensja wsród kobiet wynosi " + manMaxSalary + " z³");	
 	}
 	
+	public static void toShowRatioWomanAndMan(LinkedList<Employee> list)
+	{
+		int numberOfWoman = 0;
+		int numberOfMan = 0;
+		for (int i = 0; i < list.size(); i++) 
+		{
+			if (list.get(i).getGender()=='K') 
+			{
+				numberOfWoman++;				
+			} 
+			else 
+			{
+				numberOfMan++;
+			}
+		}
+		
+		if (numberOfWoman>numberOfMan) 
+		{
+			System.out.println("W firmie jest wiêcej kobiet.");
+		} 
+		else if(numberOfMan>numberOfWoman)
+		{
+			System.out.println("W firmie jest wiêcej mê¿czyzn.");
+		}
+		else
+		{
+			System.out.println("W firmie jest tyle samo kobiet co mê¿czyzn.");
+		}
+	}
+	
 	public static void showAllDepartmentsNumbers(LinkedList<Employee> list)
 	{
 		int departmentNumber = 0;
@@ -263,8 +292,10 @@ public class ContextMenu
 		{
 			departmentNumber = departmentNumbers.get(i);
 			System.out.println(departmentNumber);
-			calculateAvarageSalary(list, departmentNumber);
+			calculateAvarageSalaryForDepartment(list, departmentNumber);
 		}
+		
+		toShowRatioWomanAndMan(list);
 	}
 
 	public static void searchAllDepartmentsNumber(LinkedList<Employee> list, LinkedList<Integer> departmentNumbers) 
@@ -284,15 +315,15 @@ public class ContextMenu
 				{
 					break;
 				} 
-					else if(list.get(j).getDepartmentNumber()!=departmentNumber&&j==departmentNumbers.size()-1)
-					{
-						departmentNumbers.add(departmentNumber);
-					}
+				else if(list.get(j).getDepartmentNumber()!=departmentNumber&&j==departmentNumbers.size()-1)
+				{
+					departmentNumbers.add(departmentNumber);
+				}
 			}
 		}
 	}
 	
-	public static void calculateAvarageSalary(LinkedList<Employee> list, int departmentNumber)
+	public static void calculateAvarageSalaryForDepartment(LinkedList<Employee> list, int departmentNumber)
 	{
 		int avarageSalary = 0;
 		int counter = 0;
@@ -314,5 +345,47 @@ public class ContextMenu
 			{
 				System.out.println("Brak pracowników w tym dziale");
 			}			
+	}
+	
+	public static double calculateAvarageSalaryForWoman(LinkedList<Employee> list)
+	{
+		int avarageSalary = 0;
+		int counter = 0;
+		for (int i = 0; i < list.size(); i++) 
+		{
+			if (list.get(i).getGender()=='K') 
+			{
+				avarageSalary += list.get(i).getSalary();
+				counter++;
+			}
+		}
+		return avarageSalary /= counter;
+	}
+	
+	public static double calculateAvarageSalaryForMan(LinkedList<Employee> list)
+	{
+		int avarageSalary = 0;
+		int counter = 0;
+		for (int i = 0; i < list.size(); i++) 
+		{
+			if (list.get(i).getGender()=='M') 
+			{
+				avarageSalary += list.get(i).getSalary();
+				counter++;
+			}
+		}
+		return avarageSalary /= counter;
+	}
+	
+	public static double calculateRatioSalaryForWomanAndMan(LinkedList<Employee> list)
+	{
+		double ratio = 0;
+		ratio = calculateAvarageSalaryForWoman(list)/calculateAvarageSalaryForMan(list);		
+		return ratio;
+	}
+	
+	public static void showRatioForWomanAndMan(LinkedList<Employee> list) 
+	{
+		System.out.println("Stosunek œredniej p³acy kobiet do mê¿czyzn wynosi: "+ calculateRatioSalaryForWomanAndMan(list));
 	}
 }
