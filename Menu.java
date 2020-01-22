@@ -136,10 +136,14 @@ public class Menu
 
 	public static int deleteEmployeeFromWorkersList(LinkedList<Employee> list, Scanner scan) 
 	{
-		int inputChoice;
-		System.out.println("Wybierz numer pracownika do usuniêcia");					
+		int inputChoice = 0;
+		System.out.println("Wybierz numer pracownika do usuniêcia");	
+		System.out.println("Wciœnij 0, aby powróciæ do poprzedniego menu");
 		inputChoice = scan.nextInt();
-		list.remove(inputChoice-1);
+		if (inputChoice!=0) 
+		{		
+			list.remove(inputChoice-1);			
+		}
 		return inputChoice;
 	}
 

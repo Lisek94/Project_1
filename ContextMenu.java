@@ -318,6 +318,7 @@ public class ContextMenu
 				else if(list.get(j).getDepartmentNumber()!=departmentNumber&&j==departmentNumbers.size()-1)
 				{
 					departmentNumbers.add(departmentNumber);
+					break;
 				}
 			}
 		}
