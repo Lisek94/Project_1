@@ -168,10 +168,10 @@ public class ContextMenu
 				showRatioForWomanAndMan(list);
 				break;
 			case 6:
-				System.out.println("Funkcja wkrótce zostanie dodana");
+				salaryIncreaseByTenPercent(list);
 				break;
 			case 7:
-				System.out.println("Funkcja wkrótce zostanie dodana");
+				showSalaryIncreaseByInput(list);
 				break;	
 			case 8:
 				System.out.println("Funkcja wkrótce zostanie dodana");
@@ -187,6 +187,59 @@ public class ContextMenu
 			input = contextMenuForNumberSix();
 		}
 		
+	}
+	
+	public static void showSalaryIncreaseByInput(LinkedList<Employee>list)
+	{
+		double increase = calculateSalaryIncreaseByInput(list);
+		System.out.println("Stosunek podwy¿ek dla kobiet i mê¿czyzn wynosi: "+ increase);
+	}
+
+	public static double calculateSalaryIncreaseByInput(LinkedList<Employee> list) 
+	{
+		System.out.println("Podaj kwote podwy¿ki");
+		float increase = scan.nextFloat();
+		float sumIncrease = 0;
+		float sumIncreaseForWoman = 0;
+		float sumIncreaseForMan = 0;
+		for (int i = 0; i < list.size(); i++) 
+		{
+			float salary = list.get(i).getSalary();
+			list.get(i).setSalary(salary+increase);
+			sumIncrease += increase;
+			
+			if (list.get(i).getGender()=='K') 
+			{
+				sumIncreaseForWoman += increase;
+			} else
+			{
+				sumIncreaseForMan += increase;
+			}
+		}
+		System.out.println("Suma podwy¿ek wynosi " + sumIncrease);
+		
+		double ratio = sumIncreaseForWoman/sumIncreaseForMan;
+		return ratio;
+	}
+
+	public static void salaryIncreaseByTenPercent(LinkedList<Employee> list) 
+	{
+		double sumIncrease = 1.1;
+		for (int i = 0; i < list.size(); i++) 
+		{
+			float newSalary = list.get(i).getSalary();
+			if (list.get(i).getNumberOfChildren()>0) 
+			{
+				sumIncrease += list.get(i).getNumberOfChildren()*0.02;
+			}
+			if (list.get(i).isMarried()==true) 
+			{
+				sumIncrease += (float)0.03;
+			}
+			list.get(i).setSalary(newSalary*(float)sumIncrease);
+		}
+		
+		System.out.println("Pensja zosta³a zwiêkszona");
 	}
 
 	public static void calculateTheNumberOfEmployeeForInputSalary(LinkedList<Employee> list) 
@@ -387,6 +440,7 @@ public class ContextMenu
 	
 	public static void showRatioForWomanAndMan(LinkedList<Employee> list) 
 	{
-		System.out.println("Stosunek œredniej p³acy kobiet do mê¿czyzn wynosi: "+ calculateRatioSalaryForWomanAndMan(list));
+		double ratio = calculateRatioSalaryForWomanAndMan(list);
+		System.out.println("Stosunek œredniej p³acy kobiet do mê¿czyzn wynosi: "+ ratio);
 	}
 }
