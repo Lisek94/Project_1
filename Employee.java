@@ -1,6 +1,9 @@
 package lis.damian.project;
 
-public class Employee 
+import java.io.Serializable;
+
+@SuppressWarnings("serial")
+public class Employee implements Serializable
 
 {
 	private String name;
@@ -107,7 +110,7 @@ public class Employee
 		return "Imiê: " + name.toUpperCase() + "\nNazwisko: " + surname.toUpperCase();
 	}
 	
-	public String toString()
+	public String stringsToSaveFile()
 	{
 		return "Nazwisko: " + surname + "\nImiê: " + name +  "\nP³eæ: " + genderExtracted() + " \nNumer oddzia³u: "
 				+ departmentNumber + " \nWynarodzenie: " + salary+ " z³" + " \nWiek: " + age + " \nLiczba dzieci: " + numberOfChildren;

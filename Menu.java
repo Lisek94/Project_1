@@ -1,12 +1,19 @@
 package lis.damian.project;
 
-import java.io.FileWriter;
+import java.io.EOFException;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.InputMismatchException;
 import java.util.LinkedList;
 import java.util.Scanner;
 
-public class Menu 
+@SuppressWarnings("serial")
+public class Menu implements Serializable
 {
 	static Scanner scan = new Scanner(System.in);
 	
@@ -21,7 +28,7 @@ public class Menu
         System.out.println("****************************************");
         System.out.println("1. Wypisz listê wszystkch pracowników");
         System.out.println("2. Dodaj nowego pracownika");
-        System.out.println("3. Zapisz do pliku");
+        System.out.println("3. Eksportuj do pliku tekstowego");
         System.out.println("4. Usuñ pracownika");
         System.out.println("5. Edytuj dane pracownika");
         System.out.println("6. Dodatkowe funkcje");
@@ -46,11 +53,11 @@ public class Menu
         return input;       
 	}
 	
-	public static void switchCaseMenu() throws IOException 
+	public static void switchCaseMenu() throws IOException, ClassNotFoundException 
 	{
-		int inputChoice = showMenu();
 		LinkedList<Employee> list = new LinkedList<Employee>();
-		String fileName = "baza.dat";	
+		String fileName = startFile(list);
+		int inputChoice = showMenu();
 					
 		while(inputChoice != 0)
 		{
@@ -71,7 +78,7 @@ public class Menu
 				System.out.println("Pracownik dodany");
 				break;
 			case 3:
-				saveToFile(list, fileName);
+				System.out.println("Funkcja wkrótce zostanie dodana");				
 				break;
 			case 4:
 				showWorkersList(list);
@@ -100,16 +107,36 @@ public class Menu
 			System.in.read();
 			inputChoice = showMenu();
 		}
+		stopFile(list, fileName);
 		scan.close();
 	}
 
+	public static String startFile(LinkedList<Employee> list) throws IOException, ClassNotFoundException {
+		String fileName = "baza.dat";
+		File file = new File(fileName);
+		if(!file.exists()) 
+		{
+            file.createNewFile();
+        }
+		else 
+		{
+			readFile(list, fileName);
+		}
+		return fileName;
+	}
+	
 	public static void changeInformation(LinkedList<Employee> list) throws IOException 
 	{
-		int inputGetList;
+		int inputGetList = 0;
 		System.out.println("\nWybierz pracownika do edycji");
+		System.out.println("Wciœnij 0, aby powróciæ");
 		inputGetList = scan.nextInt();
-		System.out.println(list.get(inputGetList-1).showNameAndSurname());
-		ContextMenu.switchCaseContextMenuFive(list, inputGetList);
+		if (inputGetList!=0)
+		{
+			System.out.println(list.get(inputGetList-1).showNameAndSurname());
+			ContextMenu.switchCaseContextMenuFive(list, inputGetList);
+		}		
+		
 		
 	}
 
@@ -122,18 +149,41 @@ public class Menu
 		}
 	}
 
-	public static void saveToFile(LinkedList<Employee> list, String fileName) throws IOException 
+	public static void stopFile(LinkedList<Employee> list, String fileName) throws IOException 
 	{
-		Employee saveLine;
-		FileWriter saveToFile = new FileWriter(fileName);
-		for (int i = 0; i < list.size(); i++) 
+		if (list.isEmpty()) 
 		{
-		saveLine = list.get(i);			
-		saveToFile.write(i+1+"\n"+saveLine+"\n");				
-		}			
-		saveToFile.close();
+			File file = new File(fileName);
+			file.delete();
+		} else 
+		{
+			ObjectOutputStream saveToFile = new ObjectOutputStream(new FileOutputStream(fileName));
+			for (int i = 0; i < list.size(); i++) 
+			{
+			Employee saveLine = list.get(i);			
+			saveToFile.writeObject(saveLine);				
+			}			
+			saveToFile.close();
+		}
+		
 	}
 
+	public static void readFile(LinkedList<Employee> list, String fileName) throws IOException, ClassNotFoundException 
+	{
+			ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(fileName));	
+			while(true)
+			{
+				try 
+				{
+					Employee readLine = (Employee)inputStream.readObject();				
+					list.add(readLine);	
+				} catch (EOFException e) 
+				{
+					break;
+				}						
+			}																	
+			inputStream.close(); 
+	}
 	public static int deleteEmployeeFromWorkersList(LinkedList<Employee> list, Scanner scan) 
 	{
 		int inputChoice = 0;
@@ -217,6 +267,5 @@ public class Menu
 	public static void infoAboutProgram()
 	{
 		System.out.println("Wersja proramu 1.0");
-	}
-	
+	}	
 }

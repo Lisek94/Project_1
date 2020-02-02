@@ -1,12 +1,17 @@
 package lis.damian.project;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.InputMismatchException;
 import java.util.LinkedList;
 import java.util.Scanner;
 
-public class ContextMenu 
+
+
+@SuppressWarnings("serial")
+public class ContextMenu implements Serializable
 {
 
 	static Scanner scan = new Scanner(System.in);
@@ -173,11 +178,11 @@ public class ContextMenu
 			case 7:
 				showSalaryIncreaseByInput(list);
 				break;	
-			case 8:
-				System.out.println("Funkcja wkrótce zostanie dodana");
+			case 8:				
+				input = sortBySurname(list);				
 				break;
 			case 9:
-				System.out.println("Funkcja wkrótce zostanie dodana");
+				input = sortBySalary(list);
 				break;
 			default:
 				System.out.println("Nieprawid³owy wybór, spróbuj jeszcze raz");
@@ -187,6 +192,35 @@ public class ContextMenu
 			input = contextMenuForNumberSix();
 		}
 		
+	}
+
+	public static int sortBySalary(LinkedList<Employee> list) 
+	{
+		int input = 0;
+		System.out.println("1. Posortuj rosn¹co"+"\n2. Posortuj malej¹co"+"\n0. Powrót");
+		input = scan.nextInt();
+		if (input==1) 
+		{
+			list.sort(Comparator.comparing(Employee::getSalary));
+		} else if(input==2)
+		{
+			list.sort(Comparator.comparing(Employee::getSalary).reversed());
+		}
+		return input;
+	}
+	public static int sortBySurname(LinkedList<Employee> list) 
+	{
+		int input = 0;
+		System.out.println("1. Posortuj rosn¹co"+"\n2. Posortuj malej¹co"+"\n0. Powrót");
+		input = scan.nextInt();
+		if (input==1) 
+		{
+			list.sort(Comparator.comparing(Employee::getSurname));
+		} else if(input==2)
+		{
+			list.sort(Comparator.comparing(Employee::getSurname).reversed());
+		}
+		return input;
 	}
 	
 	public static void showSalaryIncreaseByInput(LinkedList<Employee>list)
