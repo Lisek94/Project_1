@@ -1,5 +1,8 @@
 package lis.damian.project;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Collections;
@@ -7,6 +10,8 @@ import java.util.Comparator;
 import java.util.InputMismatchException;
 import java.util.LinkedList;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 
@@ -190,6 +195,136 @@ public class ContextMenu implements Serializable
 			System.out.println("\nWciœnij Enter, aby kontynuowaæ...");
 			System.in.read();
 			input = contextMenuForNumberSix();
+		}
+		
+	}
+	
+	public static int contextMenuForNumberSeven()
+	{
+		System.out.println("\nWybierz opcje");
+		
+		int input = 0;
+		boolean isNotDigit = true;
+		
+		 System.out.println("1. Wyswietl osobe z najd³u¿szym nazwiskiem");
+	     System.out.println("2. Oblicz sredni wiek dla osób posiadaj¹cych dzieci");
+	     System.out.println("3. Zakoduj nazwiska");
+	     System.out.println("4. Stwórz tabele w HTML");	     
+	     System.out.println("0. Powrót");
+	   
+	     while(isNotDigit)
+	        {
+		        try 
+		        {
+		        	input = scan.nextInt();
+		        	isNotDigit = false;
+				} catch (InputMismatchException e) 
+		        {
+					System.out.println("To nie jest liczba, spróbuj jeszcze raz");		
+					isNotDigit = true;
+					scan.nextLine();
+				}	        
+	        }        
+	        return input;      
+	}
+	
+	public static void switchCaseContextMenuSeven(LinkedList<Employee> list) throws IOException 
+	{
+		String fileName = Menu.exportData(list);
+		int input = contextMenuForNumberSeven();		
+			
+		while(input != 0)
+		{
+			switch (input) 
+			{
+			case 1:
+				showTheLongestSurname(fileName);
+				break;
+			case 2:
+				avarageAge(fileName);
+				break;
+			case 3:
+				System.out.println("Funkcja wkrótce zostanie dodana");
+				break;
+			case 4:				
+				System.out.println("Funkcja wkrótce zostanie dodana");
+				break;			
+			default:
+				System.out.println("Nieprawid³owy wybór, spróbuj jeszcze raz");
+			}
+			System.out.println("\nWciœnij Enter, aby kontynuowaæ...");
+			System.in.read();
+			input = contextMenuForNumberSeven();
+		}
+		
+	}
+
+	public static void showTheLongestSurname(String fileName) throws FileNotFoundException, IOException 
+	{
+		String readLine = "";
+		String theLongestSurname = "";
+		int surnameSize = 0;
+		BufferedReader reader = new BufferedReader(new FileReader(fileName));
+		while((readLine = reader.readLine())!=null ) 
+		{			
+			Pattern pattern = Pattern.compile("Nazwisko: (\\w+)");
+			Matcher matcher = pattern.matcher(readLine);
+			if(matcher.matches()) 
+			{
+				String name = matcher.group(1);
+				if (name.length()>surnameSize) 
+				{
+					surnameSize = name.length();
+					theLongestSurname = name;
+				}
+								
+			}
+		}
+		System.out.println("Najd³u¿sze nazwisko to: " + theLongestSurname);
+		reader.close();
+	}
+	
+	public static void avarageAge(String fileName) throws FileNotFoundException, IOException 
+	{
+		String readLine = "";		
+		int age = 0;
+		String holder = "";
+		double avarageAge = 0;
+		int counter = 0;
+		int childNumber = 0;
+		
+		BufferedReader reader = new BufferedReader(new FileReader(fileName));
+		try 
+		{
+			while((readLine = reader.readLine())!=null ) 
+			{			
+				Pattern agePattern = Pattern.compile("Wiek: (\\d+)");	
+				Matcher matcherAge = agePattern.matcher(readLine);	
+				if (matcherAge.matches()) 
+				{
+					holder = matcherAge.group(1);
+					age = Integer.parseInt(holder);
+					readLine = reader.readLine();
+					Pattern childrenPattern = Pattern.compile("Liczba dzieci: (\\d+)");
+					Matcher matcherChildren = childrenPattern.matcher(readLine);
+					matcherChildren.matches();					
+					holder = matcherChildren.group(1);
+					childNumber = Integer.parseInt(holder);
+					
+					if(childNumber!=0) 
+					{							
+						avarageAge += age;				
+						counter++;
+					}
+				}
+				
+			}
+			avarageAge /= counter;
+			System.out.println("Œrednia wieku to: " + avarageAge);
+			reader.close();
+		} catch (IllegalStateException e) 
+		{
+			System.out.println("B³¹d odczytu danych");
 		}
 		
 	}

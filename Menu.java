@@ -4,6 +4,7 @@ import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -77,8 +78,8 @@ public class Menu implements Serializable
 				list.add(addEmployee());
 				System.out.println("Pracownik dodany");
 				break;
-			case 3:
-				System.out.println("Funkcja wkrótce zostanie dodana");				
+			case 3:				
+				exportData(list);
 				break;
 			case 4:
 				showWorkersList(list);
@@ -92,7 +93,7 @@ public class Menu implements Serializable
 				ContextMenu.switchCaseContextMenuSix(list);
 				break;
 			case 7:
-				System.out.println("Funkcja wkrótce zostanie dodana");
+				ContextMenu.switchCaseContextMenuSeven(list);
 				break;
 			case 8:
 				infoAboutProgram();
@@ -109,6 +110,23 @@ public class Menu implements Serializable
 		}
 		stopFile(list, fileName);
 		scan.close();
+	}
+
+	public static String exportData(LinkedList<Employee> list) throws IOException 
+	{
+		System.out.println("Podaj nazwe pliku");
+		scan.nextLine();
+		String fileName = scan.nextLine()+".txt";
+		File file = new File(fileName);
+		file.createNewFile();
+		FileWriter fileWriter = new FileWriter(fileName);
+		
+		for (int i = 0; i < list.size(); i++) 
+		{
+			fileWriter.write(list.get(i).stringsToSaveFile()+"\n\n");
+		}
+		fileWriter.close();
+		return fileName;
 	}
 
 	public static String startFile(LinkedList<Employee> list) throws IOException, ClassNotFoundException {
@@ -155,7 +173,8 @@ public class Menu implements Serializable
 		{
 			File file = new File(fileName);
 			file.delete();
-		} else 
+		} 
+		else 
 		{
 			ObjectOutputStream saveToFile = new ObjectOutputStream(new FileOutputStream(fileName));
 			for (int i = 0; i < list.size(); i++) 
