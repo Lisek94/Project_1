@@ -113,7 +113,7 @@ public class Employee implements Serializable
 	public String stringsToSaveFile()
 	{
 		return "Nazwisko: " + surname + "\nImiê: " + name +  "\nP³eæ: " + genderExtracted() + "\nNumer oddzia³u: "
-				+ departmentNumber + "\nWynarodzenie: " + salary+ " z³" + "\nWiek: " + age + "\nLiczba dzieci: " + numberOfChildren;
+				+ departmentNumber + "\nWynagrodzenie: " + salary+ " z³" + "\nWiek: " + age + "\nLiczba dzieci: " + numberOfChildren;
 	}
 	
 }

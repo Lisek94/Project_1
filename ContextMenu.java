@@ -3,6 +3,7 @@ package lis.damian.project;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Collections;
@@ -243,8 +244,8 @@ public class ContextMenu implements Serializable
 			case 2:
 				avarageAge(fileName);
 				break;
-			case 3:
-				System.out.println("Funkcja wkrótce zostanie dodana");
+			case 3:					
+				encodeFile(fileName);
 				break;
 			case 4:				
 				System.out.println("Funkcja wkrótce zostanie dodana");
@@ -259,6 +260,99 @@ public class ContextMenu implements Serializable
 		
 	}
 
+	public static double calculateAvSalary(String fileName) throws IOException 
+	{
+		String readLine = "";	
+		int counter = 0;
+		double avSalary = 0;
+		double salary = 0;
+		BufferedReader reader = new BufferedReader(new FileReader(fileName));
+		
+		while((readLine = reader.readLine())!=null ) 
+		{		
+			Pattern salaryPattern = Pattern.compile("Wynagrodzenie: (\\d+.\\d+) z³");	
+			Matcher matcherSalary = salaryPattern.matcher(readLine);
+			if (matcherSalary.matches()) 
+			{
+				String holder = matcherSalary.group(1);
+				salary = Double.parseDouble(holder);
+				avSalary += salary;
+				counter++;
+			}
+			
+			
+		}		
+		reader.close();
+		return avSalary /= counter;
+	}
+
+	public static void encodeFile(String fileName) throws IOException
+	{
+		double avSalary = calculateAvSalary(fileName);
+		int counter = 0;	
+		String lineEncodeHolder = "";
+		String lineHolder = "";
+		String readLine = "";		
+		BufferedReader reader = new BufferedReader(new FileReader(fileName));
+		LinkedList<String> strings = new LinkedList<String>();
+		
+		while((readLine = reader.readLine())!=null ) 
+		{			
+			Pattern surnamePattern = Pattern.compile("Nazwisko: (\\w+)");
+			Matcher surnameMatcher = surnamePattern.matcher(readLine);
+			if(surnameMatcher.matches()) 
+			{
+				lineHolder = readLine;
+			}
+			
+			Pattern salaryPattern = Pattern.compile("Wynagrodzenie: (\\d+.\\d+) z³");	
+			Matcher matcherSalary = salaryPattern.matcher(readLine);
+			if (matcherSalary.matches()) 
+			{
+				String salaryHolder = matcherSalary.group(1);
+				double salary = Double.parseDouble(salaryHolder);	
+				if(salary<avSalary)
+				{
+					lineEncodeHolder = encodeSurname(lineEncodeHolder, lineHolder);	
+					strings.set(counter-4, lineEncodeHolder);
+				}
+			}
+			
+			strings.add(readLine);
+			counter++;
+		}
+		saveEncodeListToFile(strings,fileName);
+		reader.close();
+	}
+
+	public static String encodeSurname(String lineEncodeHolder, String lineHolder) 
+	{
+		Character letter = ' ';
+		for (int i = 0; i < lineHolder.length(); i++) 
+		{
+			letter = lineHolder.charAt(i);
+			if(i>10&&i<lineHolder.length()-1)
+			{
+				lineEncodeHolder += "*";
+			} else
+			{
+				lineEncodeHolder += letter;
+			}						
+		}
+		return lineEncodeHolder;
+	}
+			
+	public static void saveEncodeListToFile(LinkedList<String> strings, String fileName) throws IOException
+	{
+		FileWriter fileWriter = new FileWriter(fileName);
+		
+		for (int i = 0; i < strings.size(); i++) 
+		{
+			fileWriter.write(strings.get(i)+"\n");
+		}
+		fileWriter.close();		
+	}
+	
 	public static void showTheLongestSurname(String fileName) throws FileNotFoundException, IOException 
 	{
 		String readLine = "";
@@ -271,11 +365,11 @@ public class ContextMenu implements Serializable
 			Matcher matcher = pattern.matcher(readLine);
 			if(matcher.matches()) 
 			{
-				String name = matcher.group(1);
-				if (name.length()>surnameSize) 
+				String surname = matcher.group(1);
+				if (surname.length()>surnameSize) 
 				{
-					surnameSize = name.length();
-					theLongestSurname = name;
+					surnameSize = surname.length();
+					theLongestSurname = surname;
 				}
 								
 			}
